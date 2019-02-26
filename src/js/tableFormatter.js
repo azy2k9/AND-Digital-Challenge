@@ -31,9 +31,10 @@
       candidates.forEach(candidate => insertCandidate(table, candidate.name, candidate.skills));
     }
 
-    filterCandidateBySkill = (candidates, skill) => {
-      // INSERT YOUR LOGIC HERE   <-------------------------
-      return candidates;
+    filterCandidateBySkill = (allCandidates, skill) => {
+      return allCandidates.filter((candidate) => {
+          return candidate.skills.find((candidateSkill) => candidateSkill === skill)
+      })
     }
 
 
