@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import './App.css'
-import { Grid, List, ListItem, ListItemText, FormControl,
-FormLabel, FormControlLabel, Typography, AppBar, 
-Toolbar, Checkbox, FormGroup } from '@material-ui/core';
+import { Grid, FormControl, FormLabel, Typography, 
+AppBar, FormControlLabel, Toolbar, Checkbox,
+FormGroup } from '@material-ui/core';
+import Candidates from './components/Candidates';
 
 const styles = theme => ({
   root: {
@@ -12,7 +13,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   grow: {
-    flexGrow: 1,
+  flexGrow: 1,
     paddingTop: 30,
     paddingBottom: 30
   },
@@ -23,8 +24,8 @@ const styles = theme => ({
   space: {
     paddingTop: 20,
     paddingLeft: 50,
-  }
-});
+    }
+  });
 
 
 class App extends Component {
@@ -39,7 +40,8 @@ class App extends Component {
       { name: "Matt", skills: ["PHP", ".Net", "Docker"] },
     ],
     allSkills: [],
-    selectedSkills: []
+    selectedSkills: [],
+    filteredCandidates: [],
   }
 
   componentDidMount() {
@@ -48,7 +50,7 @@ class App extends Component {
       return Array.from(new Set([...accumulator, ...candidate.skills]))
     }, [])
 
-    this.setState({ allSkills: skills, selectedSkills: skills})
+    this.setState({ allSkills: skills, selectedSkills: skills, filteredCandidates: allCandidates})
   }
 
   handleCheckboxSelect = e => {
@@ -61,18 +63,21 @@ class App extends Component {
       skills = [...skills, e.target.value]
     }
 
-    this.setState({ selectedSkills: skills })
+    this.setState({ selectedSkills: skills }, () => this.updateCandidatesList())
   }
+
+  updateCandidatesList = () => {
+    let filteredCandidates = [...this.state.allCandidates]
+    filteredCandidates = filteredCandidates.reduce((accumulator,candidate) => {
+      const candidateHasSkill = candidate.skills.some(skill => this.state.selectedSkills.includes(skill))
+      return candidateHasSkill ? [...accumulator, candidate] : [...accumulator]
+    }, [])
+
+    this.setState({ filteredCandidates: filteredCandidates})
+  } 
 
   render() {
     const { classes } = this.props;
-
-    const candidates = this.state.allCandidates.map((candidate, index) => 
-      <ListItem key={index}>
-        <ListItemText primary={candidate.name} secondary={candidate.skills.join(", ")} />
-      </ListItem>
-    )
-
     const skills = this.state.allSkills.map((skill, index) => 
         <FormControlLabel value={skill} control={<Checkbox onClick={this.handleCheckboxSelect} checked={this.state.selectedSkills.includes(skill)} />} 
         label={skill} key={index}  />
@@ -94,9 +99,7 @@ class App extends Component {
         </Grid>
           <Grid container alignContent={"center"} justify={"center"}>
             <Grid item>
-              <List className={classes.root}>
-                {candidates}            
-              </List>
+              <Candidates allCandidates={this.state.filteredCandidates} />
             </Grid>
             <Grid item className={classes.space}>
               <FormControl component="fieldset">
