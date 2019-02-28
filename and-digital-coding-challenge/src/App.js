@@ -2,20 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import './App.css'
-import { Grid, FormControl, FormLabel, Typography, 
-AppBar, FormControlLabel, Toolbar, Checkbox,
-FormGroup } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import Candidates from './components/Candidates';
+import Header from './components/Header';
+import Title from './components/Title';
+import SkillsSelector from './components/SkillsSelector';
 
 const styles = theme => ({
   root: {
     backgroundColor: theme.palette.background.paper,
     flexGrow: 1,
-  },
-  grow: {
-  flexGrow: 1,
-    paddingTop: 30,
-    paddingBottom: 30
   },
   title: {
     paddingTop: 50,
@@ -39,77 +35,41 @@ class App extends Component {
       { name: "Matt", skills: ["PHP", "AWS"] },
       { name: "Matt", skills: ["PHP", ".Net", "Docker"] },
     ],
-    allSkills: [],
-    selectedSkills: [],
     filteredCandidates: [],
   }
 
   componentDidMount() {
-    const allCandidates = [ ...this.state.allCandidates]
-    const skills = allCandidates.reduce((accumulator, candidate) => {
-      return Array.from(new Set([...accumulator, ...candidate.skills]))
-    }, [])
-
-    this.setState({ allSkills: skills, selectedSkills: skills, filteredCandidates: allCandidates})
+    this.setState({ filteredCandidates: this.state.allCandidates})    
   }
 
-  handleCheckboxSelect = e => {
-    let skills = [...this.state.selectedSkills]
-    
-    if(skills.includes(e.target.value)) {
-      skills = skills.filter(skill => skill !== e.target.value)
-    }
-    else {
-      skills = [...skills, e.target.value]
-    }
-
-    this.setState({ selectedSkills: skills }, () => this.updateCandidatesList())
-  }
-
-  updateCandidatesList = () => {
+  updateCandidatesList = (selectedSkills) => {
     let filteredCandidates = [...this.state.allCandidates]
     filteredCandidates = filteredCandidates.reduce((accumulator,candidate) => {
-      const candidateHasSkill = candidate.skills.some(skill => this.state.selectedSkills.includes(skill))
+      const candidateHasSkill = candidate.skills.some(skill => selectedSkills.includes(skill))
       return candidateHasSkill ? [...accumulator, candidate] : [...accumulator]
     }, [])
 
     this.setState({ filteredCandidates: filteredCandidates})
-  } 
+  }
 
   render() {
     const { classes } = this.props;
-    const skills = this.state.allSkills.map((skill, index) => 
-        <FormControlLabel value={skill} control={<Checkbox onClick={this.handleCheckboxSelect} checked={this.state.selectedSkills.includes(skill)} />} 
-        label={skill} key={index}  />
-    )
-
+    
     return (
       <>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h4" color="inherit" className={classes.grow} align="center">
-            <b>AND Digital</b>
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
+      <Header />
       <Grid container alignItems={"center"} direction={"column"} justify={"center"}>
         <Grid item xs={12} className={classes.title}>
-          <Typography variant="h3">Candidates Filter App</Typography>
+          <Title />
         </Grid>
-          <Grid container alignContent={"center"} justify={"center"}>
-            <Grid item>
-              <Candidates allCandidates={this.state.filteredCandidates} />
-            </Grid>
-            <Grid item className={classes.space}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" style={{ textAlign: 'center' }}>Select skills!</FormLabel>
-                <FormGroup>
-                  {skills}
-                </FormGroup>
-              </FormControl>
-            </Grid>
+        <Grid container alignContent={"center"} justify={"center"}>
+          <Grid item>
+            <Candidates allCandidates={this.state.filteredCandidates} />
           </Grid>
+          <Grid item className={classes.space}>
+            <SkillsSelector allCandidates={this.state.allCandidates} updateCandidatesList={this.updateCandidatesList} />
+          </Grid>
+        </Grid>
       </Grid>
       </>
     );
