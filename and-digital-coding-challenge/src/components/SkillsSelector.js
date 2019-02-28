@@ -1,14 +1,6 @@
 import React, { Component } from 'react'
 import { FormControl, FormLabel, FormGroup, FormControlLabel, Checkbox, withStyles } from '@material-ui/core'
 
-const styles = () => ({
-    grow: {
-        flexGrow: 1,
-        paddingTop: 30,
-        paddingBottom: 30
-    }
-});
-
 class SkillsSelector extends Component {
     state = {
         allSkills: [],
@@ -58,4 +50,4 @@ class SkillsSelector extends Component {
     }
 }
 
-export default withStyles(styles)(SkillsSelector)
+export default SkillsSelector

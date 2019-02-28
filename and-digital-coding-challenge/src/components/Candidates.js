@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { withStyles } from '@material-ui/core/styles';
-import { List, ListItem, ListItemText } from "@material-ui/core";
+import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
+import { List, ListItem, ListItemText } from "@material-ui/core"
 
 const styles = theme => ({
 root: {
@@ -25,5 +26,9 @@ class Candidates extends Component {
     )
   }
 }
+
+Candidates.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
 
 export default withStyles(styles)(Candidates);

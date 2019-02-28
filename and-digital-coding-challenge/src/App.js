@@ -9,10 +9,6 @@ import Title from './components/Title';
 import SkillsSelector from './components/SkillsSelector';
 
 const styles = theme => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-    flexGrow: 1,
-  },
   title: {
     paddingTop: 50,
     paddingBottom: 25
