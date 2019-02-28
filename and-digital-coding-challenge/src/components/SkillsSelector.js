@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FormControl, FormLabel, FormGroup, FormControlLabel, Checkbox, withStyles } from '@material-ui/core'
+import { FormControl, FormLabel, FormGroup, FormControlLabel, Checkbox } from '@material-ui/core'
 
 class SkillsSelector extends Component {
     state = {
