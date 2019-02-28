@@ -1,5 +1,5 @@
 ## Coding Challenge Set by AND Digitial
-This project will require an ### `npm install` in the project directory to install all dependancies for the project
+This project will require an `npm install` in the project directory to install all dependancies for the project
 
 ## Available Scripts
 
